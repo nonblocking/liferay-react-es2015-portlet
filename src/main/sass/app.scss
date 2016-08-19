@@ -1,0 +1,48 @@
+
+
+$COLOR_FONT: #343333;
+$COLOR_RED: #923132;
+
+.react-portlet-demo-es2015 {
+  color: $COLOR_FONT;
+
+  a {
+    color: $COLOR_FONT;
+    text-decoration: underline;
+    padding: 5px 0;
+
+    &:hover {
+      color: $COLOR_RED;
+    }
+
+    &.disabled {
+      &,&:hover {
+        text-decoration: none;
+        color: #999;
+        cursor: default;
+      }
+    }
+  }
+
+  .portlet-user-table {
+    border-collapse: collapse;
+    border: 1px solid #999;
+
+    tr {
+      &.even {
+        background: #eee;
+      }
+    }
+
+    th {
+      padding: 5px;
+      text-align: left;
+      border-bottom: 1px solid #999;
+    }
+
+    td {
+      padding: 5px;
+    }
+  }
+}
+

@@ -1,0 +1,48 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>React Portlet Demo</title>
+    <link rel="stylesheet" href="css/app.css" th:if="${standalone}" />
+</head>
+
+<body>
+    <div id="reactPortletDemoES2015" class="react-portlet-demo-es2015" th:id="${portletId}">
+        <demo-portlet-ng1-es2015>Loading...</demo-portlet-ng1-es2015>
+    </div>
+
+    <!-- Bootstrap React -->
+    <script type="application/javascript" th:inline="javascript">
+        (function() {
+            if (typeof(AUI) !== 'undefined') {
+                /* We are within Liferay */
+                AUI().ready(function() {
+                    startApp();
+                });
+            } else {
+                document.addEventListener("DOMContentLoaded", function(event) {
+                    startApp();
+                });
+            }
+
+            function startApp() {
+                var portletConfig = {
+                    ajaxUrl: /*[[${ajaxURL}]]*/ "/testdata/",
+                    isStandalone: /*[[${standalone}]]*/ true,
+                    authenticatedUser: /*[[${authenticatedUser}]]*/ "anonymous",
+                    portletId: /*[[${portletId}]]*/ 'reactPortletDemoES2015',
+                    portletAppContextPath: /*[[${portletAppContextPath}]]*/ ''
+                };
+
+                var appRootElem = document.getElementById(portletConfig.portletId);
+                startReactPortletDemoApp(appRootElem, portletConfig);
+
+            }
+        })();
+    </script>
+
+    <script type="application/javascript" src="js/bundle.js" th:if="${standalone}"></script>
+    <script type="application/javascript" src="//localhost:35729/livereload.js" th:if="${standalone}"></script>
+</body>
+
+</html>

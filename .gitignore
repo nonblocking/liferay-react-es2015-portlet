@@ -1,0 +1,14 @@
+
+.idea
+*.iml
+.sass-cache
+bower_components
+node_modules
+target
+*.log
+hs_err_pid*
+
+#Generated resources
+src/main/webapp/css/*
+src/main/webapp/js/*
+
