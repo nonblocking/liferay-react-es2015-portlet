@@ -1,5 +1,6 @@
 import React from 'react';
 import DynamicView from './dynamic_view.jsx';
+import PropTypes from 'prop-types';
 
 class App extends React.Component {
 
@@ -20,8 +21,8 @@ class App extends React.Component {
 }
 
 App.childContextTypes = {
-    dynamicViewService: React.PropTypes.object,
-    backend: React.PropTypes.object
+    dynamicViewService: PropTypes.object,
+    backend: PropTypes.object
 };
 
 export default App;

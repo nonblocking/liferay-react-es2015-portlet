@@ -1,6 +1,6 @@
 'use strict';
 
-const gulp = require('gulp');
+const { task, src, series, dest, watch } = require('gulp');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const browserify = require('browserify');
@@ -13,67 +13,74 @@ const livereload = require('gulp-livereload');
 const connect = require('gulp-connect');
 const open = require('gulp-open');
 
-gulp.task('js-check', function() {
-    return gulp.src('src/main/javascript/**/*.js*')
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
 
-gulp.task('js-build', [ 'js-check' ], function() {
-    browserify('src/main/javascript/boot.jsx', { debug: true })
-        .transform(babelify, { presets: [ 'es2015', 'react' ] })
+function jsBuild() {
+    return browserify('src/main/javascript/boot.jsx', { debug: true })
+        .transform(babelify, { presets: ['@babel/env', '@babel/preset-react'] })
         .bundle()
         .pipe(source('bundle.js'))
         .pipe(buffer())
         .pipe(uglify({ mangle: false }))
-        .pipe(gulp.dest('src/main/webapp/js'))
-});
+        .pipe(dest('src/main/webapp/js'))
+};
 
-gulp.task('js-watch', [ 'js-check' ], function() {
-    const bundler = watchify(browserify('src/main/javascript/boot.jsx', { debug: true })
-        .transform(babelify, { presets: [ 'es2015', 'react' ] }))
-        .on('update', function() {
-            console.log('Re-Bundling JavaScript...');
-            rebundle();
-        });
+function jsCheck() {
+    return src('src/main/javascript/**/*.js*')
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+};
 
-    function rebundle() {
-        bundler.bundle()
-            .on('error', function(err) { console.error(err); this.emit('end'); })
-            .pipe(source('bundle.js'))
-            .pipe(buffer())
-            .pipe(gulp.dest('src/main/webapp/js'))
-            .pipe(livereload());
-    }
-
-    rebundle();
-
-});
-
-gulp.task('sass-compile', function() {
-    return gulp.src('src/main/sass/**/*.scss')
+function sassCompile() {
+    return src('src/main/sass/**/*.scss')
         .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('src/main/webapp/css'))
+        .pipe(dest('src/main/webapp/css'))
         .pipe(livereload());
+};
+
+task('sass-watch', function () {
+    watch('src/main/sass/**/*.scss', sassCompile);
 });
 
-gulp.task('sass-watch', [ 'sass-compile'], function() {
-    gulp.watch('src/main/sass/**/*.scss', [ 'sass-compile' ]);
-});
+task('dist', series(sassCompile, jsCheck, jsBuild));
 
-gulp.task('watch', [ 'sass-watch', 'js-watch' ], function() {
+function server(done) {
     livereload({ start: true });
     connect.server({
         root: 'src/main/webapp',
         port: 9000
     });
 
-    gulp.src('src/main/webapp/index.html')
+    src('src/main/webapp/index.html')
         .pipe(open({ uri: 'http://localhost:9000' }));
+    
+    done();
+}
+
+task('watch', function () {
+    watch('src/main/sass/**/*.scss', sassCompile);
+    watch('src/main/javascript/**/*.*', series(jsCheck, jsWatch, server));
 });
 
-gulp.task('dist', [ 'sass-compile', 'js-build' ], function() {});
 
-gulp.task('default', [ 'watch' ], function() {});
+function jsWatch(done) {
+    const bundler = watchify(browserify('src/main/javascript/boot.jsx', { debug: true })
+        .transform(babelify, { presets: ['@babel/env', '@babel/preset-react'] }))
+        .on('update', function () {
+            console.log('Re-Bundling JavaScript...');
+            rebundle();
+        });
 
+    function rebundle() {
+        bundler.bundle()
+            .on('error', function (err) { console.error(err); this.emit('end'); })
+            .pipe(source('bundle.js'))
+            .pipe(buffer())
+            .pipe(dest('src/main/webapp/js'))
+            .pipe(livereload());
+    }
+
+    rebundle();
+
+    done();
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import UserDetail from './user_detail.jsx';
+import PropTypes from 'prop-types';
 
 class UserList extends React.Component {
 
@@ -119,8 +120,8 @@ class UserList extends React.Component {
 }
 
 UserList.contextTypes = {
-    dynamicViewService: React.PropTypes.object,
-    backend: React.PropTypes.object
+    dynamicViewService: PropTypes.object,
+    backend: PropTypes.object
 };
 
 export default UserList;

@@ -1,5 +1,6 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class DynamicView extends React.Component {
 
@@ -35,7 +36,7 @@ class DynamicView extends React.Component {
 }
 
 DynamicView.contextTypes = {
-    dynamicViewService: React.PropTypes.object
+    dynamicViewService: PropTypes.object
 };
 
 export default DynamicView;
