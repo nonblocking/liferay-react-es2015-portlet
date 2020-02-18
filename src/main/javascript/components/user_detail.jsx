@@ -1,6 +1,7 @@
 import React from 'react';
 import UserList from './user_list.jsx';
 import FormattedDate from './formatted_date.jsx';
+import PropTypes from 'prop-types';
 
 class UserDetail extends React.Component {
 
@@ -86,15 +87,13 @@ class UserDetail extends React.Component {
             );
         }
 
-        return (
-            <div>Loading...</div>
-        );
+        return (<div>Loading...</div>);
     }
 }
 
 UserDetail.contextTypes = {
-    dynamicViewService: React.PropTypes.object,
-    backend: React.PropTypes.object
+    dynamicViewService: PropTypes.object,
+    backend: PropTypes.object
 };
 
 export default UserDetail;

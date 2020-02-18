@@ -79,8 +79,8 @@
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.0</version>
                 <configuration>
-                    <nodeVersion>v4.4.3</nodeVersion>
-                    <npmVersion>3.8.8</npmVersion>
+                    <nodeVersion>v12.16.0</nodeVersion>
+                    <npmVersion>6.13.4</npmVersion>
                     <nodeDownloadRoot>http://nodejs.org/dist/</nodeDownloadRoot>
                     <npmDownloadRoot>http://registry.npmjs.org/npm/-/</npmDownloadRoot>
                     <installDirectory>target</installDirectory>
